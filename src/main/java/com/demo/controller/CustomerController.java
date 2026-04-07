@@ -14,62 +14,37 @@ import com.demo.model.Customer;
 import com.demo.service.CustomerService;
 
 @RestController
-public class CustomerController 
-{
+public class CustomerController {
+
 	@Autowired
 	private CustomerService service;
-	
+
 	@Autowired
 	private AuthenticationManager authManager;
-	
+
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody Customer c){
-		
-	/*
-	 * System.out.print(c.getEmail()); System.out.print(c.getPwd());
-	 * 
-	 * 
-	 * UsernamePasswordAuthenticationToken token = new
-	 * UsernamePasswordAuthenticationToken(c.getEmail(), c.getPwd()); Authentication
-	 * authenticate = authManager.authenticate(token); boolean status =
-	 * authenticate.isAuthenticated(); if(status) { return new
-	 * ResponseEntity<>("login sucess", HttpStatus.OK); }else { return new
-	 * ResponseEntity<>("login denied", HttpStatus.BAD_REQUEST); } }
-	 */
+	public ResponseEntity<String> login(@RequestBody Customer c) {
 
-	        // 🔍 Debug prints
-	        System.out.println("Email: " + c.getEmail());
-	        System.out.println("Pwd: " + c.getPwd());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(c.getEmail(), c.getPwd());
 
-	        try {
-	            UsernamePasswordAuthenticationToken token =
-	                    new UsernamePasswordAuthenticationToken(c.getEmail(), c.getPwd());
-
-	            Authentication auth = authManager.authenticate(token);
-
-	            if (auth.isAuthenticated()) {
-	                return new ResponseEntity<>("Login Success", HttpStatus.OK);
-	            } else {
-	                return new ResponseEntity<>("Login Failed", HttpStatus.UNAUTHORIZED);
-	            }
-
-	        } catch (Exception e) {
-	            return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
-	        }
+		Authentication authenticate = authManager.authenticate(token);
+		boolean status = authenticate.isAuthenticated();
+		if (status) {
+			return new ResponseEntity<>("login suuccess", HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>("login denied", HttpStatus.BAD_REQUEST);
+		}
 	}
-	//customer register
-	@PostMapping("/register") //http://localhost:7866/register
-		
-	public ResponseEntity<String> register(@RequestBody Customer c) //ResponseEntity---> returns the status codes
-	{
+
+	// customer register
+	@PostMapping("/register") // http://localhost:7866/register
+	public ResponseEntity<String> register(@RequestBody Customer c) {
 		boolean status = service.saveCustomer(c);
-		if(status)
-		{
-			return new ResponseEntity<>("success",HttpStatus.CREATED);
-		}
-		else
-		{
-			return new ResponseEntity<>("not created",HttpStatus.INTERNAL_SERVER_ERROR);
+		if (status) {
+			return new ResponseEntity<>("success", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>("not created", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 }

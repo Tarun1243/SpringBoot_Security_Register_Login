@@ -14,16 +14,16 @@ import com.demo.dao.CustomerDao;
 import com.demo.model.Customer;
 
 @Service
-public class CustomerService implements UserDetailsService{
+public class CustomerService implements UserDetailsService
+{
 	@Autowired
 	private CustomerDao dao;
 	
 	@Autowired
 	private BCryptPasswordEncoder pwdEncoder;
 	
-	public boolean saveCustomer(Customer c){
-		
-		
+	public boolean saveCustomer(Customer c)
+	{
 		String encoded = pwdEncoder.encode(c.getPwd()); //encryption completed
 		c.setPwd(encoded); //encrypted password is updated and saved into the database
 		
@@ -32,11 +32,9 @@ public class CustomerService implements UserDetailsService{
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		
-		
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException 
+	{
 		Customer c = dao.findByEmail(email);
-		
 		
 		return new User(c.getEmail(), c.getPwd(), Collections.emptyList());
 	}
